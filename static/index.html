@@ -1,0 +1,46 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Nedtelling - Countdown på norsk</title>
+  <style>
+body {
+  text-align: center;
+  font-size: 10vmin;
+}
+button {
+  font-size: 5vmin;
+  padding: 2vmin;
+}
+div.letters-view {
+  width: 100%;
+}
+span.letter-view {
+  display: inline-block;
+  text-align: center;
+  width: 10vmin;
+  height: 10vmin;
+}
+div.timer {
+  margin-top: 10vmin;
+  text-align: center;
+}
+.restart-buttons {
+  margin-top: 20vmin;
+}
+body { padding: 0; margin: 0; }
+  </style>
+</head>
+
+<body>
+  <div id="elm"></div>
+  
+  <script type="text/javascript" src="./nedtelling.js">
+  </script>
+
+  <script type="text/javascript">
+    Elm.Main.init({ node: document.getElementById("elm") });
+  </script>
+</body>
+</html>
+
