@@ -2,9 +2,10 @@ module View exposing (view)
 
 import Html exposing (Html)
 import Html.Events exposing (onClick)
-import Html.Attributes exposing (class)
+import Html.Attributes exposing (class, href, target)
 import Maybe.Extra as MaybeE
 
+import Wordlist
 import Alphabet exposing (LetterType(..))
 import Game exposing (Model, Msg(..), Stage(..))
 
@@ -26,9 +27,17 @@ maybeShowWordView x = case x.stage of
     ]
   _ -> emptyDiv
 
+wordLinkURL w = "https://naob.no/søk/" ++ w
+
+shownWord cls w = Html.span [class cls] [Html.a [href (wordLinkURL w), target "_blank"] [Html.text w]]
+
 maybeShownWordView x = case x.stage of
   ShowingWord _ _ s -> Html.div [] [Html.text s]
-  ShowedWord s -> Html.div [] [Html.text s]
+  ShowedWord s -> case x.wordlist of
+    Nothing -> Html.div [] [Html.text s]
+    Just wl -> let ok = Wordlist.lookup wl (String.toLower s)
+                   cls = if ok then "word-good" else "word-bad"
+               in shownWord cls s
   _ -> emptyDiv
 
 maybeNewAnswerButton x = if not (case x.stage of
