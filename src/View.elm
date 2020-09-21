@@ -6,7 +6,7 @@ import Html.Attributes exposing (class)
 import Maybe.Extra as MaybeE
 
 import Alphabet exposing (LetterType(..))
-import Game exposing (Model, Msg(..), Stage(..), startGame, update, defaultRules)
+import Game exposing (Model, Msg(..), Stage(..))
 
 maybeDrawButtons model = if (shouldDraw model) then drawButtons else emptyDiv 
 

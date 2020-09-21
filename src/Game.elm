@@ -1,6 +1,9 @@
-module Game exposing (Model, Rules, Msg(..), Stage(..), startGame, update, defaultRules)
+module Game exposing (Model, Rules, Msg(..), Stage(..), update, init)
 
 import Alphabet exposing (Alphabet, LetterType(..))
+import Wordlist exposing (Wordlist)
+
+import Http
 
 import Random
 
@@ -23,6 +26,7 @@ startGame ru =
   { rules = ru
   , stage = Drawing ru.numLetters
   , letters = []
+  , wordlist = Nothing
   }
 
 type alias Model = 
@@ -40,6 +44,7 @@ type Msg = Draw LetterType
          | StopTimer
          | NewAnswer
          | NewRound
+         | WordlistResponse (Result Http.Error String)
 
 beginCountdown : Model -> Model
 beginCountdown m = { m | stage = Thinking m.rules.thinkingTimeSeconds }
@@ -95,7 +100,7 @@ drawCmd lt al = let f wcs = Random.generate DrewLetter (Alphabet.letterGenerator
 
 initCommand = Http.get
   { url = "/norwegian.freq.txt"
-  , expect = Http.expectString LoadedWordlist
+  , expect = Http.expectString WordlistResponse
   }
 
-init = startGame defaultRules, initCommand
+init = (startGame defaultRules, initCommand)
