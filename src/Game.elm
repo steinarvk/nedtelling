@@ -95,7 +95,8 @@ update msg model = case msg of
   DeclareLength n -> ({ model | stage = ShowingWord n model.letters "" }, Cmd.none)
   ShowLetter index -> (updateShownWord index model, Cmd.none)
   NewAnswer -> ({ model | stage = DeclaringLength }, Cmd.none)
-  NewRound -> (startGame model.rules, Cmd.none)
+  NewRound -> let blankCanvas = startGame model.rules
+              in ({ blankCanvas | wordlist = model.wordlist }, Cmd.none)
   StopTimer -> ({ model | stage = DeclaringLength }, Cmd.none)
   ShowSolutions -> ({ model | stage = ShowingSolutions }, Cmd.none)
 
