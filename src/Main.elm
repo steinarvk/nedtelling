@@ -9,7 +9,7 @@ import View
 
 main : Program Value Game.Model Game.Msg
 main = Browser.element
-          { init = \_ -> ( Game.startGame Game.defaultRules, Cmd.none )
+          { init = Game.init
           , view = View.view
           , update = Game.update
           , subscriptions = subscriptions

@@ -29,6 +29,7 @@ type alias Model =
   { rules : Rules
   , stage : Stage
   , letters : List Char
+  , wordlist : Maybe Wordlist
   }
 
 type Msg = Draw LetterType
@@ -74,6 +75,9 @@ updateShownWord i m = case m.stage of
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model = case msg of
+  WordlistResponse resp -> case resp of
+    Ok data -> ({ model | wordlist = Just (Wordlist.fromFrequencyListString data)}, Cmd.none)
+    Err errmsg -> (model, Cmd.none)
   Draw lt -> (model, drawCmd lt model.rules.alphabet)
   DrewLetter ch -> (addLetter ch model, Cmd.none)
   ClockTick -> (tickSecond model, Cmd.none)
@@ -89,3 +93,9 @@ drawCmd lt al = let f wcs = Random.generate DrewLetter (Alphabet.letterGenerator
                   Vowel -> f al.vowels
                   Consonant -> f al.consonants
 
+initCommand = Http.get
+  { url = "/norwegian.freq.txt"
+  , expect = Http.expectString LoadedWordlist
+  }
+
+init = startGame defaultRules, initCommand
