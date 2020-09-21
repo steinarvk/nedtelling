@@ -1,5 +1,6 @@
 module Wordlist exposing (Wordlist, fromList, lookup)
 
+import Set exposing (Set)
 import Dict exposing (Dict)
 
 type Trie = Trie (Dict Char Trie)
@@ -29,10 +30,11 @@ emptyTrie = Trie Dict.empty
 
 terminator = '.'
 
-lookup : Wordlist -> String -> Bool
-lookup (Wordlist t) w = trieLookup (convertWord w) t
-
-type Wordlist = Wordlist Trie
+type Wordlist = Wordlist (Set String)
 
 fromList : List String -> Wordlist
-fromList ws = Wordlist (List.foldl trieAddWord emptyTrie ws)
+fromList ws = Wordlist (Set.fromList ws)
+
+lookup : Wordlist -> String -> Bool
+lookup (Wordlist ss) s = Set.member s ss
+

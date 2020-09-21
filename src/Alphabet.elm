@@ -41,34 +41,34 @@ applySpecSmoothing k xs = List.map (\(Letter ch kk t) -> Letter ch (k + kk) t) x
 smoothingConstant = 0.5
 
 norwegianAlphabet = fromSpec (applySpecSmoothing smoothingConstant [
-    Letter 'A' 4.9 Vowel
+    Letter 'A' 5.8 Vowel
   , Letter 'B' 1.6 Consonant
-  , Letter 'C' 0.15 Consonant
-  , Letter 'D' 2.8 Consonant
-  , Letter 'E' 11.5 Vowel
-  , Letter 'F' 1.7 Consonant
-  , Letter 'G' 3.0 Consonant
-  , Letter 'H' 1.0 Consonant
-  , Letter 'I' 4.7 Vowel
-  , Letter 'J' 0.9 Consonant
-  , Letter 'K' 2.9 Consonant
-  , Letter 'L' 4.6 Consonant
-  , Letter 'M' 2.5 Consonant
-  , Letter 'N' 5.6 Consonant
-  , Letter 'O' 4.1 Vowel
-  , Letter 'P' 1.2 Consonant
-  , Letter 'Q' 0.0 Consonant
-  , Letter 'R' 6.3 Consonant
-  , Letter 'S' 5.8 Consonant
-  , Letter 'T' 6.5 Consonant
-  , Letter 'U' 1.3 Vowel
-  , Letter 'V' 1.9 Consonant
-  , Letter 'W' 0.0 Consonant
-  , Letter 'X' 0.0 Consonant
-  , Letter 'Y' 0.4 Vowel
-  , Letter 'Z' 0.0 Consonant
+  , Letter 'C' 0.08 Consonant
+  , Letter 'D' 4.3 Consonant
+  , Letter 'E' 15.9 Vowel
+  , Letter 'F' 2.2 Consonant
+  , Letter 'G' 3.8 Consonant
+  , Letter 'H' 1.2 Consonant
+  , Letter 'I' 6.3 Vowel
+  , Letter 'J' 0.7 Consonant
+  , Letter 'K' 3.8 Consonant
+  , Letter 'L' 5.3 Consonant
+  , Letter 'M' 3.4 Consonant
+  , Letter 'N' 7.7 Consonant
+  , Letter 'O' 5.3 Vowel
+  , Letter 'P' 1.9 Consonant
+  , Letter 'Q' 0.01 Consonant
+  , Letter 'R' 8.8 Consonant
+  , Letter 'S' 6.1 Consonant
+  , Letter 'T' 8.3 Consonant
+  , Letter 'U' 1.6 Vowel
+  , Letter 'V' 2.6 Consonant
+  , Letter 'W' 0.03 Consonant
+  , Letter 'X' 0.008 Consonant
+  , Letter 'Y' 0.7 Vowel
+  , Letter 'Z' 0.008 Consonant
   , Letter 'Æ' 0.2 Vowel
-  , Letter 'Ø' 0.7 Vowel
-  , Letter 'Å' 2.0 Vowel
+  , Letter 'Ø' 0.8 Vowel
+  , Letter 'Å' 1.4 Vowel
   ])
 
