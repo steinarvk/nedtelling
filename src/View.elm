@@ -29,7 +29,11 @@ maybeShowWordView x = case x.stage of
 
 wordLinkURL w = "https://naob.no/søk/" ++ (String.toLower w)
 
-shownWord cls w = Html.span [class cls] [Html.a [href (wordLinkURL w), target "_blank"] [Html.text w]]
+wordLinkText s = s ++ " (" ++ (String.fromInt (String.length s)) ++ ")"
+
+shownWord cls w = Html.span [class cls]
+                            [Html.a [href (wordLinkURL w), target "_blank"]
+                                    [Html.text (wordLinkText w)]]
 
 maybeShownWordView x = case x.stage of
   ShowingWord _ _ s -> Html.div [] [Html.text s]
@@ -56,7 +60,7 @@ isThinking stage = case stage of
   _ -> False
 
 showAnagramsView : List String -> Html Msg
-showAnagramsView xs = let f s = Html.div [] [Html.text s]
+showAnagramsView xs = let f s = Html.div [] [shownWord "word-solution" s]
                       in Html.div [] (List.map f xs)
 
 shouldShowLetters stage = case stage of
@@ -84,6 +88,12 @@ view model =
     , if not (isThinking model.stage) then emptyDiv else stopTimerButton
     , maybeShowWordView model
     , maybeShownWordView model
+    , case model.stage of
+        ShowingSolutions -> case model.wordlist of 
+          Just wl -> let anagrams = Wordlist.partialAnagramsOf wl (String.fromList model.letters)
+                     in showAnagramsView (List.take 10 anagrams)
+          _ -> emptyDiv
+        _ -> emptyDiv
     , Html.div [class "restart-buttons"] [
         maybeNewAnswerButton model
       , if canShowSolutions model.stage
@@ -92,12 +102,6 @@ view model =
         else emptyDiv
       , Html.button [onClick NewRound] [Html.text "Ny runde"]
       ]
-    , case model.stage of
-        ShowingSolutions -> case model.wordlist of 
-          Just wl -> let anagrams = Wordlist.partialAnagramsOf wl (String.fromList model.letters)
-                     in showAnagramsView (List.take 10 anagrams)
-          _ -> emptyDiv
-        _ -> emptyDiv
     ]
 
 drawButtons : Html Msg
