@@ -55,6 +55,10 @@ isThinking stage = case stage of
   Thinking _ -> True
   _ -> False
 
+showAnagramsView : List String -> Html Msg
+showAnagramsView xs = let f s = Html.div [] [Html.text s]
+                      in Html.div [] ([Html.text "cheating panel"] ++ (List.map f xs))
+
 view : Model -> Html Msg
 view model =
   Html.div
@@ -73,6 +77,12 @@ view model =
         maybeNewAnswerButton model
       , Html.button [onClick NewRound] [Html.text "Ny runde"]
       ]
+    , case model.stage of
+        Thinking _ -> case model.wordlist of
+            Just wl -> let anagrams = Wordlist.partialAnagramsOf wl (String.fromList model.letters)
+                       in showAnagramsView anagrams
+            Nothing -> emptyDiv
+        _ -> emptyDiv
     ]
 
 drawButtons : Html Msg

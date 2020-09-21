@@ -1,4 +1,4 @@
-module Wordlist exposing (Wordlist, fromList, lookup, anagramsOf, fromFrequencyListString)
+module Wordlist exposing (Wordlist, fromList, lookup, anagramsOf, fromFrequencyListString, partialAnagramsOf)
 
 import Set exposing (Set)
 import Dict exposing (Dict)
@@ -44,11 +44,10 @@ lookup : Wordlist -> String -> Bool
 lookup (Wordlist ss _) s = Set.member s ss
 
 anagramsOf : Wordlist -> String -> List String
-anagramsOf (Wordlist _ d) s = anagramDictLookup d s
+anagramsOf (Wordlist _ d) s = anagramDictLookup d (String.toLower s)
 
 canonicalizeAnagram : String -> String
 canonicalizeAnagram s = (String.fromList (List.sort (String.toList s)))
-
 
 anagramDictInsert : String -> Dict String (List String) -> Dict String (List String)
 anagramDictInsert s d =
@@ -59,6 +58,21 @@ anagramDictInsert s d =
 
 anagramDictFromList : List String -> (Dict String (List String))
 anagramDictFromList xs = List.foldl anagramDictInsert Dict.empty xs
+
+powerset : List a -> List (List a)
+powerset xs = case xs of
+  [] -> [[]]
+  (first :: rest) -> let prest = powerset rest
+                     in (List.map (\option -> [first] ++ option) prest) ++ prest
+
+stringPowerset s = List.map String.fromList (powerset (String.toList s))
+
+partialAnagramsOf : Wordlist -> String -> List String
+partialAnagramsOf wl s =
+  let raw = List.concatMap (anagramsOf wl) (stringPowerset s)
+      uniq = Set.toList (Set.fromList raw)
+      byLength = List.reverse (List.sortBy String.length raw)
+  in byLength
 
 anagramDictLookup : Dict String (List String) -> String -> List String
 anagramDictLookup d s =
