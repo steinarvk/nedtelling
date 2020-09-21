@@ -57,16 +57,27 @@ isThinking stage = case stage of
 
 showAnagramsView : List String -> Html Msg
 showAnagramsView xs = let f s = Html.div [] [Html.text s]
-                      in Html.div [] ([Html.text "cheating panel"] ++ (List.map f xs))
+                      in Html.div [] (List.map f xs)
+
+shouldShowLetters stage = case stage of
+  Drawing _ -> True
+  Thinking _ -> True
+  ShowingSolutions -> True
+  _ -> False
+
+canShowSolutions stage = case stage of
+  DeclaringLength -> True
+  ShowingWord _ _ _ -> True
+  ShowedWord _ -> True
+  _ -> False
 
 view : Model -> Html Msg
 view model =
   Html.div
     []
-    [ case model.stage of
-        Drawing _ -> lettersView (paddedLetters model)
-        Thinking _ -> lettersView (paddedLetters model)
-        _ -> emptyDiv
+    [ if shouldShowLetters model.stage
+      then lettersView (paddedLetters model)
+      else emptyDiv
     , maybeDrawButtons model
     , maybeTimer model
     , if model.stage /= DeclaringLength then emptyDiv else declareLengthButtons (List.length model.letters)
@@ -75,13 +86,17 @@ view model =
     , maybeShownWordView model
     , Html.div [class "restart-buttons"] [
         maybeNewAnswerButton model
+      , if canShowSolutions model.stage
+        then Html.button [onClick ShowSolutions]
+                         [Html.text "Vis løsninger"]
+        else emptyDiv
       , Html.button [onClick NewRound] [Html.text "Ny runde"]
       ]
     , case model.stage of
-        Thinking _ -> case model.wordlist of
-            Just wl -> let anagrams = Wordlist.partialAnagramsOf wl (String.fromList model.letters)
-                       in showAnagramsView anagrams
-            Nothing -> emptyDiv
+        ShowingSolutions -> case model.wordlist of 
+          Just wl -> let anagrams = Wordlist.partialAnagramsOf wl (String.fromList model.letters)
+                     in showAnagramsView (List.take 10 anagrams)
+          _ -> emptyDiv
         _ -> emptyDiv
     ]
 

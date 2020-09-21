@@ -7,7 +7,12 @@ import Http
 
 import Random
 
-type Stage = Drawing Int | Thinking Int | DeclaringLength | ShowingWord Int (List Char) String | ShowedWord String
+type Stage = Drawing Int
+           | Thinking Int
+           | DeclaringLength
+           | ShowingWord Int (List Char) String
+           | ShowedWord String
+           | ShowingSolutions
 
 type alias Rules =
   { alphabet : Alphabet
@@ -45,6 +50,7 @@ type Msg = Draw LetterType
          | NewAnswer
          | NewRound
          | WordlistResponse (Result Http.Error String)
+         | ShowSolutions
 
 beginCountdown : Model -> Model
 beginCountdown m = { m | stage = Thinking m.rules.thinkingTimeSeconds }
@@ -91,6 +97,7 @@ update msg model = case msg of
   NewAnswer -> ({ model | stage = DeclaringLength }, Cmd.none)
   NewRound -> (startGame model.rules, Cmd.none)
   StopTimer -> ({ model | stage = DeclaringLength }, Cmd.none)
+  ShowSolutions -> ({ model | stage = ShowingSolutions }, Cmd.none)
 
 drawCmd : LetterType -> Alphabet -> Cmd Msg
 drawCmd lt al = let f wcs = Random.generate DrewLetter (Alphabet.letterGenerator wcs)

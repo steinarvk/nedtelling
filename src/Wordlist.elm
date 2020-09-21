@@ -69,9 +69,9 @@ stringPowerset s = List.map String.fromList (powerset (String.toList s))
 
 partialAnagramsOf : Wordlist -> String -> List String
 partialAnagramsOf wl s =
-  let raw = List.concatMap (anagramsOf wl) (stringPowerset s)
+  let raw = List.concatMap (anagramsOf wl) (List.filter (\x -> x /= "") (stringPowerset s))
       uniq = Set.toList (Set.fromList raw)
-      byLength = List.reverse (List.sortBy String.length raw)
+      byLength = List.reverse (List.sortBy String.length uniq)
   in byLength
 
 anagramDictLookup : Dict String (List String) -> String -> List String
