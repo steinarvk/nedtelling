@@ -27,7 +27,7 @@ maybeShowWordView x = case x.stage of
     ]
   _ -> emptyDiv
 
-wordLinkURL w = "https://naob.no/søk/" ++ w
+wordLinkURL w = "https://naob.no/søk/" ++ (String.toLower w)
 
 shownWord cls w = Html.span [class cls] [Html.a [href (wordLinkURL w), target "_blank"] [Html.text w]]
 
